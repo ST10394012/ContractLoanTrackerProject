@@ -27,7 +27,7 @@ public class JsonUtil {
         }
     }
     
-    //Reads a list of objects from JSON file
+    // a list of objects to JSON file
     public static <T> List<T> readFromJson(String filePath, Class<T> clazz) {
         File file = new File(filePath); // Creates file reference
         if (!file.exists()) { // Checks if file exists
