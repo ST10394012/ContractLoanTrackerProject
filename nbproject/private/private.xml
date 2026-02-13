@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/C:/Users/User/OneDrive/Documents/NetBeansProjects/Construction%20Loan%20Tracker/src/view/LoginPage.java</file>
+            <file>file:/C:/Users/User/OneDrive/Documents/NetBeansProjects/Construction%20Loan%20Tracker/src/view/DashboardPage.java</file>
+            <file>file:/C:/Users/User/OneDrive/Documents/NetBeansProjects/Construction%20Loan%20Tracker/src/view/DisbursementPage.java</file>
+            <file>file:/C:/Users/User/OneDrive/Documents/NetBeansProjects/Construction%20Loan%20Tracker/src/model/Loan.java</file>
+            <file>file:/C:/Users/User/OneDrive/Documents/NetBeansProjects/Construction%20Loan%20Tracker/src/util/JsonUtil.java</file>
+            <file>file:/C:/Users/User/OneDrive/Documents/NetBeansProjects/Construction%20Loan%20Tracker/src/util/ValidationUtil.java</file>
+            <file>file:/C:/Users/User/OneDrive/Documents/NetBeansProjects/Construction%20Loan%20Tracker/src/view/AddCustomerPage.java</file>
+            <file>file:/C:/Users/User/OneDrive/Documents/NetBeansProjects/Construction%20Loan%20Tracker/src/service/LoanService.java</file>
+            <file>file:/C:/Users/User/OneDrive/Documents/NetBeansProjects/Construction%20Loan%20Tracker/src/service/InterestCalculator.java</file>
+            <file>file:/C:/Users/User/OneDrive/Documents/NetBeansProjects/Construction%20Loan%20Tracker/src/model/Disbursement.java</file>
+            <file>file:/C:/Users/User/OneDrive/Documents/NetBeansProjects/Construction%20Loan%20Tracker/src/data/repayments.json</file>
+            <file>file:/C:/Users/User/OneDrive/Documents/NetBeansProjects/Construction%20Loan%20Tracker/src/construction/loan/tracker/ConstructionLoanTracker.java</file>
+            <file>file:/C:/Users/User/OneDrive/Documents/NetBeansProjects/Construction%20Loan%20Tracker/src/view/LoanPage.java</file>
+            <file>file:/C:/Users/User/OneDrive/Documents/NetBeansProjects/Construction%20Loan%20Tracker/src/service/EligibilityService.java</file>
+            <file>file:/C:/Users/User/OneDrive/Documents/NetBeansProjects/Construction%20Loan%20Tracker/src/data/customers.json</file>
+            <file>file:/C:/Users/User/OneDrive/Documents/NetBeansProjects/Construction%20Loan%20Tracker/src/model/Customer.java</file>
+            <file>file:/C:/Users/User/OneDrive/Documents/NetBeansProjects/Construction%20Loan%20Tracker/src/data/loans.json</file>
+            <file>file:/C:/Users/User/OneDrive/Documents/NetBeansProjects/Construction%20Loan%20Tracker/src/model/Repayment.java</file>
+            <file>file:/C:/Users/User/OneDrive/Documents/NetBeansProjects/Construction%20Loan%20Tracker/src/view/RepaymentPage.java</file>
+        </group>
+    </open-files>
+</project-private>
