@@ -14,16 +14,16 @@ public class Disbursement {
     @SerializedName("loanId") // Links to parent loan
     private String loanId;
     
-    @SerializedName("stage") // Construction stage name
-    private String stage; // "Foundation", "Structural", "Roofing", "Finishing"
+    @SerializedName("stage") 
+    private String stage; 
     
-    @SerializedName("amount") // Amount disbursed
+    @SerializedName("amount") 
     private double amount;
     
-    @SerializedName("date") // Disbursement date
-    private String date; // Date in ISO format
+    @SerializedName("date") 
+    private String date; 
     
-    @SerializedName("inspectionApproved") // Inspection status
+    @SerializedName("inspectionApproved") 
     private boolean inspectionApproved;
     
     // Default constructor
@@ -32,11 +32,11 @@ public class Disbursement {
     // Constructor for new disbursements
     public Disbursement(String loanId, String stage, double amount, boolean inspectionApproved) {
         this.id = java.util.UUID.randomUUID().toString(); // Generates unique ID
-        this.loanId = loanId; // Links to loan
-        this.stage = stage; // Sets construction stage
-        this.amount = amount; // Sets disbursed amount
-        this.date = LocalDate.now().toString(); // Sets current date
-        this.inspectionApproved = inspectionApproved; // Sets inspection status
+        this.loanId = loanId; 
+        this.stage = stage; 
+        this.amount = amount; 
+        this.date = LocalDate.now().toString(); 
+        this.inspectionApproved = inspectionApproved; 
     }
     
     // All getters and setters
