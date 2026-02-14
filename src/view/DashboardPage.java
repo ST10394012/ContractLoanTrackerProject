@@ -9,5 +9,8 @@ package view;
  * @author User
  */
 public class DashboardPage {
+
+    public DashboardPage(String par) {
+    }
     
 }
