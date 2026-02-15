@@ -1,0 +1,11 @@
+[
+  {
+    "id": "9555e5ff-dca3-458d-9952-a2188351e9ff",
+    "loanId": "21d86a9b-374f-4127-b60d-5788f84de2a5",
+    "amount": 10000.0,
+    "dueDate": "2026-03-16",
+    "paymentDate": "2026-02-16",
+    "isLate": false,
+    "penalty": 0.0
+  }
+]

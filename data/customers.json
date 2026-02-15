@@ -1,0 +1,18 @@
+[
+  {
+    "id": "602250d2-46b0-4e9a-812f-826000d266c4",
+    "name": "Sontaga Mashalane",
+    "type": "INDIVIDUAL",
+    "creditScore": 600,
+    "income": 30000.0,
+    "debt": 500.0
+  },
+  {
+    "id": "ff173bf0-7ec8-42ae-b47e-cec4a7ad0048",
+    "name": "Morwapula Mashalane",
+    "type": "BUSINESS",
+    "creditScore": 700,
+    "income": 400000.0,
+    "debt": 1000.0
+  }
+]

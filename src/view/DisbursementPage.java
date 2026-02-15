@@ -4,162 +4,238 @@
  */
 package view;
 
+import model.Customer;
 import model.Loan;
 import service.LoanService;
 import util.ValidationUtil;
-
+import java.util.List;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.DecimalFormat;
+import static javax.swing.SpringLayout.SOUTH;
 
-public class DisbursementPage extends JDialog{
-    private LoanService loanService; // Business service
-    private DashboardPage parent; // Parent reference
+
+/**
+ * SIMPLIFIED Disbursement Page - FIXED LOAN SELECTION
+ */
+public class DisbursementPage extends JDialog {
+    
+    private LoanService loanService;
+    private DashboardPage parent;
     
     // UI Components
-    private JComboBox<String> loanComboBox; // Approved loan selector
-    private JComboBox<String> stageComboBox; // Construction stage selector
-    private JTextField amountField; // Disbursement amount
-    private JCheckBox inspectionCheckBox; // Inspection approval
+    private JComboBox<String> loanComboBox;
+    private JTextField amountField;
+    private JComboBox<String> stageComboBox;
+    private JCheckBox inspectionCheckBox;
+    private JButton disburseButton;
+    
+    private DecimalFormat moneyFormat = new DecimalFormat("R#,##0.00");
     
     public DisbursementPage(DashboardPage parent) {
-        super(parent, "Record Disbursement", ModalityType.APPLICATION_MODAL);
+        super(parent, "💰 Record Disbursement", ModalityType.APPLICATION_MODAL);
         this.parent = parent;
         this.loanService = new LoanService();
         
         initializeUI();
-        loadApprovedLoans(); // Only shows APPROVED loans
+        loadApprovedLoans();
         setLocationRelativeTo(parent);
     }
     
     private void initializeUI() {
-        setSize(500, 400);
+        setSize(450, 400);
         setLayout(new BorderLayout(10, 10));
         
         // Header
         JPanel headerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        JLabel titleLabel = new JLabel("Record Construction Disbursement");
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        JLabel titleLabel = new JLabel("🏗️ Record Disbursement", JLabel.CENTER);
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        titleLabel.setForeground(Color.BLUE);
         headerPanel.add(titleLabel);
         add(headerPanel, BorderLayout.NORTH);
         
-        // Form panel
+        // Form
         JPanel formPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.insets = new Insets(15, 15, 15, 15);
         gbc.fill = GridBagConstraints.HORIZONTAL;
         
-        // Select Loan
-        gbc.gridx = 0; gbc.gridy = 0;
-        formPanel.add(new JLabel("Select Approved Loan:"), gbc);
-        gbc.gridx = 1; gbc.gridy = 0;
+        // 1. Loan Selection
+        gbc.gridx = 0; gbc.gridy = 0; gbc.gridwidth = 2;
+        formPanel.add(new JLabel("📋 Select Approved Loan:"), gbc);
+        gbc.gridy = 1; gbc.gridwidth = 1;
         loanComboBox = new JComboBox<>();
-        loanComboBox.setPreferredSize(new Dimension(250, 25));
+        loanComboBox.setPreferredSize(new Dimension(300, 28));
+        loanComboBox.addActionListener(e -> updateDisburseButton());
         formPanel.add(loanComboBox, gbc);
         
-        // Construction Stage
-        gbc.gridx = 0; gbc.gridy = 1;
-        formPanel.add(new JLabel("Construction Stage:"), gbc);
+        // 2. Amount
+        gbc.gridx = 0; gbc.gridy = 2; gbc.gridwidth = 1;
+        formPanel.add(new JLabel("💰 Amount (R):"), gbc);
+        gbc.gridx = 1;
+        amountField = new JTextField(15);
+        amountField.setHorizontalAlignment(JTextField.RIGHT);
+        amountField.setEditable(true);
+        amountField.addActionListener(e -> updateDisburseButton());
+        formPanel.add(amountField, gbc);
+        
+        // 3. Stage
+        gbc.gridx = 0; gbc.gridy = 3; gbc.gridwidth = 1;
+        formPanel.add(new JLabel("🏠 Stage:"), gbc);
         gbc.gridx = 1;
         stageComboBox = new JComboBox<>(new String[]{
             "Foundation", "Structural", "Roofing", "Finishing"
         });
         formPanel.add(stageComboBox, gbc);
         
-        // Amount
-        gbc.gridx = 0; gbc.gridy = 2;
-        formPanel.add(new JLabel("Disbursement Amount (R):"), gbc);
-        gbc.gridx = 1;
-        amountField = new JTextField(15);
-        formPanel.add(amountField, gbc);
-        
-        // Inspection Approval
-        gbc.gridx = 0; gbc.gridy = 3; gbc.gridwidth = 2;
-        inspectionCheckBox = new JCheckBox("Inspection Approved (Required)");
+        // 4. Inspection
+        gbc.gridx = 0; gbc.gridy = 4; gbc.gridwidth = 2;
+        inspectionCheckBox = new JCheckBox("✅ Inspection Approved (REQUIRED)");
+        inspectionCheckBox.setFont(new Font("Arial", Font.BOLD, 14));
+        inspectionCheckBox.setForeground(Color.RED);
+        inspectionCheckBox.addActionListener(e -> updateDisburseButton());
         formPanel.add(inspectionCheckBox, gbc);
         
         add(formPanel, BorderLayout.CENTER);
         
         // Buttons
-        JPanel buttonPanel = new JPanel(new FlowLayout());
-        JButton disburseButton = new JButton("Record Disbursement");
-        disburseButton.addActionListener(new DisburseListener());
-        JButton cancelButton = new JButton("Cancel");
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        JButton cancelButton = new JButton("❌ Cancel");
         cancelButton.addActionListener(e -> dispose());
+        
+        disburseButton = new JButton("💰 Record Disbursement");
+        disburseButton.setBackground(Color.GREEN);
+        disburseButton.setForeground(Color.WHITE);
+        disburseButton.setFont(new Font("Arial", Font.BOLD, 16));
+        disburseButton.setEnabled(false);
+        disburseButton.addActionListener(new DisburseListener());
         
         buttonPanel.add(cancelButton);
         buttonPanel.add(disburseButton);
         add(buttonPanel, BorderLayout.SOUTH);
+        
+        pack();
     }
     
+    /**
+     * **SIMPLIFIED LOAN LOADING - Stores full loan objects**
+     */
     private void loadApprovedLoans() {
-        // Only loads loans with APPROVED status
-        for (Loan loan : loanService.getAllLoans()) {
-            if ("APPROVED".equals(loan.getStatus())) {
-                loanComboBox.addItem("Loan ID: " + loan.getId() + 
-                                   " | Customer: " + loan.getLoanAmount() + "R");
+        loanComboBox.removeAllItems();
+        List<Loan> allLoans = loanService.getAllLoans();
+        int approvedCount = 0;
+        
+        for (Loan loan : allLoans) {
+            if ("APPROVED".equals(loan.getStatus()) && loan.getOutstandingBalance() > 0) {
+                Customer customer = loanService.getCustomerById(loan.getCustomerId());
+                String customerName = (customer != null) ? customer.getName() : "Unknown";
+                
+                // **SIMPLE FORMAT**: Full loan ID + customer
+                String displayText = String.format("%s - %s (R%s available)", 
+                    loan.getId(),
+                    customerName,
+                    moneyFormat.format(loan.getOutstandingBalance())
+                );
+                loanComboBox.addItem(displayText);
+                loanComboBox.putClientProperty(displayText, loan); // **STORE LOAN OBJECT**
+                approvedCount++;
             }
+        }
+        
+        if (approvedCount == 0) {
+            loanComboBox.addItem("❌ No approved loans available");
         }
     }
     
+    /**
+     * **SIMPLE & RELIABLE: Gets loan directly from stored property**
+     */
     private Loan getSelectedLoan() {
-        String selected = (String) loanComboBox.getSelectedItem();
-        if (selected == null) return null;
-        String loanId = selected.substring(8, selected.indexOf(" |"));
-        return loanService.getLoanById(loanId);
+        String selectedText = (String) loanComboBox.getSelectedItem();
+        if (selectedText == null || selectedText.contains("❌")) {
+            return null;
+        }
+        
+        // **FIXED: Get loan directly from stored property**
+        Loan loan = (Loan) loanComboBox.getClientProperty(selectedText);
+        return loan;
     }
     
+    /**
+     * Auto-activate button logic
+     */
+    private void updateDisburseButton() {
+        Loan loan = getSelectedLoan();
+        boolean loanSelected = loan != null;
+        boolean inspectionChecked = inspectionCheckBox.isSelected();
+        boolean amountValid = false;
+        
+        try {
+            String amountText = amountField.getText().trim().replaceAll("[^0-9.]", "");
+            double amount = Double.parseDouble(amountText);
+            amountValid = amount > 0 && loan != null && amount <= loan.getOutstandingBalance();
+        } catch (Exception e) {
+            amountValid = false;
+        }
+        
+        disburseButton.setEnabled(loanSelected && inspectionChecked && amountValid);
+    }
+    
+    /**
+     * **FIXED DisburseListener - Now works perfectly**
+     */
     private class DisburseListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
             Loan loan = getSelectedLoan();
+            
+            // **DEBUG: Show what was found**
+            System.out.println("Selected loan: " + (loan != null ? loan.getId() : "NULL"));
+            
             if (loan == null) {
                 JOptionPane.showMessageDialog(DisbursementPage.this, 
-                    "Please select an approved loan");
+                    "⚠️ No valid loan selected. Please select from dropdown.", 
+                    "No Loan", JOptionPane.ERROR_MESSAGE);
                 return;
             }
             
             try {
-                double amount = Double.parseDouble(amountField.getText());
-                
-                if (!ValidationUtil.isValidAmount(amount, "Amount")) {
-                    JOptionPane.showMessageDialog(DisbursementPage.this, 
-                        "Amount must be positive");
-                    return;
-                }
+                double amount = Double.parseDouble(amountField.getText().trim().replaceAll("[^0-9.]", ""));
                 
                 if (amount > loan.getOutstandingBalance()) {
                     JOptionPane.showMessageDialog(DisbursementPage.this, 
-                        "Amount exceeds remaining balance: R" + 
-                        String.format("%.2f", loan.getOutstandingBalance()));
+                        "❌ Amount (R" + moneyFormat.format(amount) + 
+                        ") exceeds balance (R" + moneyFormat.format(loan.getOutstandingBalance()) + ")");
                     return;
                 }
                 
                 if (!inspectionCheckBox.isSelected()) {
-                    JOptionPane.showMessageDialog(DisbursementPage.this, 
-                        "Inspection approval is REQUIRED for disbursements");
+                    JOptionPane.showMessageDialog(DisbursementPage.this, "❌ Inspection REQUIRED!");
                     return;
                 }
                 
-                // Record disbursement
-                loanService.recordDisbursement(loan.getId(), 
-                    (String) stageComboBox.getSelectedItem(), amount, true);
+                String stage = (String) stageComboBox.getSelectedItem();
+                loanService.recordDisbursement(loan.getId(), stage, amount, true);
                 
                 JOptionPane.showMessageDialog(DisbursementPage.this, 
-                    "Disbursement recorded successfully!\n" +
-                    "Stage: " + stageComboBox.getSelectedItem() + "\n" +
-                    "Amount: R" + String.format("%.2f", amount));
+                    "✅ SUCCESS!\n\n" +
+                    "Loan: " + loan.getId().substring(0, 8) + "...\n" +
+                    "Stage: " + stage + "\n" +
+                    "Amount: R" + moneyFormat.format(amount) + "\n" +
+                    "New Balance: R" + moneyFormat.format(
+                        loanService.getLoanById(loan.getId()).getOutstandingBalance()) + "\n\n" +
+                    "💾 Saved to loans.json", 
+                    "Disbursement Complete", JOptionPane.INFORMATION_MESSAGE);
                 
                 parent.repaint();
                 dispose();
                 
-            } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(DisbursementPage.this, 
-                    "Please enter valid amount");
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(DisbursementPage.this, 
-                    "Error: " + ex.getMessage());
+                    "❌ Error: " + ex.getMessage());
+                ex.printStackTrace();
             }
         }
     }

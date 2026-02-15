@@ -13,20 +13,27 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import model.Loan;
 
-public class LoanPage extends JDialog{
+/**
+ * Complete loan application and approval page (FIXED VERSION)
+ * Handles application creation, eligibility check, and approval workflow
+ */
+public class LoanPage extends JDialog {
+    
     private LoanService loanService; // Main business service
     private EligibilityService eligibilityService; // Eligibility checker
     private InterestCalculator interestCalculator; // Interest calculations
     private DashboardPage parent; // Parent dashboard reference
     
-    // UI Components
+    // UI Components - PROPER REFERENCES (FIXED)
     private JComboBox<String> customerComboBox; // Customer selector
     private JTextField constructionCostField; // Project cost input
     private JTextField loanAmountField; // Requested loan amount
     private JComboBox<String> interestMethodComboBox; // Fixed/Reducing selector
     private JTextArea eligibilityResultArea; // Shows eligibility feedback
     private JButton checkEligibilityButton; // Triggers eligibility check
+    private JButton approveButton; // APPROVE button (NOW PROPERLY REFERENCED)
     
     public LoanPage(DashboardPage parent) {
         super(parent, "Loan Application & Approval", ModalityType.APPLICATION_MODAL);
@@ -35,29 +42,29 @@ public class LoanPage extends JDialog{
         this.eligibilityService = new EligibilityService();
         this.interestCalculator = new InterestCalculator();
         
-        initializeUI();
+        initializeUI(); // Sets up complete user interface
         loadCustomers(); // Populates customer dropdown
-        setLocationRelativeTo(parent);
+        setLocationRelativeTo(parent); // Centers on parent
     }
     
     private void initializeUI() {
-        setSize(600, 550);
-        setLayout(new BorderLayout(10, 10));
+        setSize(600, 550); // Dialog dimensions
+        setLayout(new BorderLayout(10, 10)); // Main layout
         
-        // Header
+        // Header panel
         JLabel titleLabel = new JLabel("Loan Application", JLabel.CENTER);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 20));
         titleLabel.setForeground(Color.BLUE);
         add(titleLabel, BorderLayout.NORTH);
         
-        // Main form
+        // Main form panel with GridBagLayout
         JPanel formPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(8, 8, 8, 8);
+        gbc.insets = new Insets(8, 8, 8, 8); // Padding between components
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.anchor = GridBagConstraints.WEST;
         
-        // Customer Selection
+        // Customer Selection (Row 0)
         gbc.gridx = 0; gbc.gridy = 0; gbc.gridwidth = 2;
         formPanel.add(new JLabel("Select Customer:", JLabel.CENTER), gbc);
         gbc.gridy = 1;
@@ -65,59 +72,65 @@ public class LoanPage extends JDialog{
         customerComboBox.setPreferredSize(new Dimension(300, 25));
         formPanel.add(customerComboBox, gbc);
         
-        // Construction Cost
+        // Construction Cost (Row 2)
         gbc.gridx = 0; gbc.gridy = 2; gbc.gridwidth = 1;
         formPanel.add(new JLabel("Construction Cost (R):"), gbc);
         gbc.gridx = 1;
         constructionCostField = new JTextField(15);
         formPanel.add(constructionCostField, gbc);
         
-        // Loan Amount
+        // Loan Amount (Row 3)
         gbc.gridx = 0; gbc.gridy = 3;
         formPanel.add(new JLabel("Requested Loan Amount (R):"), gbc);
         gbc.gridx = 1;
         loanAmountField = new JTextField(15);
         formPanel.add(loanAmountField, gbc);
         
-        // Interest Method
+        // Interest Method (Row 4)
         gbc.gridx = 0; gbc.gridy = 4;
         formPanel.add(new JLabel("Interest Method:"), gbc);
         gbc.gridx = 1;
         interestMethodComboBox = new JComboBox<>(new String[]{"FIXED", "REDUCING"});
         formPanel.add(interestMethodComboBox, gbc);
         
-        // Eligibility Check Button
+        // Eligibility Check Button (Row 5)
         gbc.gridx = 0; gbc.gridy = 5; gbc.gridwidth = 2;
-        checkEligibilityButton = new JButton("Check Eligibility");
-        checkEligibilityButton.addActionListener(new EligibilityListener());
+        checkEligibilityButton = new JButton("✅ Check Eligibility");
+        checkEligibilityButton.addActionListener(new EligibilityListener()); // Adds click handler
         formPanel.add(checkEligibilityButton, gbc);
         
-        // Eligibility Results
+        // Eligibility Results Area (Row 6)
         gbc.gridy = 6; gbc.gridwidth = 2;
-        gbc.weighty = 1.0; // Expands to fill space
+        gbc.weighty = 1.0; // Expands to fill available space
         eligibilityResultArea = new JTextArea(6, 30);
-        eligibilityResultArea.setEditable(false);
+        eligibilityResultArea.setEditable(false); // Read-only
         eligibilityResultArea.setBorder(BorderFactory.createTitledBorder("Eligibility Result"));
         formPanel.add(new JScrollPane(eligibilityResultArea), gbc);
         
-        add(formPanel, BorderLayout.CENTER);
+        add(formPanel, BorderLayout.CENTER); // Adds form to dialog
         
-        // Action buttons
-        JPanel buttonPanel = new JPanel(new FlowLayout());
-        JButton approveButton = new JButton("Approve Loan");
-        approveButton.setEnabled(false); // Disabled until eligible
-        approveButton.addActionListener(new ApproveListener());
+        // Button panel (Bottom)
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         
-        JButton cancelButton = new JButton("Cancel");
-        cancelButton.addActionListener(e -> dispose());
+        JButton cancelButton = new JButton("❌ Cancel");
+        cancelButton.addActionListener(e -> dispose()); // Closes dialog
+        
+        approveButton = new JButton("✅ APPROVE LOAN"); // **PROPER REFERENCE HERE**
+        approveButton.setEnabled(false); // Initially disabled
+        approveButton.setBackground(Color.GREEN); // Visual indicator
+        approveButton.setForeground(Color.WHITE);
+        approveButton.setFont(new Font("Arial", Font.BOLD, 14));
+        approveButton.addActionListener(new ApproveListener()); // Adds approve functionality
         
         buttonPanel.add(cancelButton);
-        buttonPanel.add(approveButton);
-        add(buttonPanel, BorderLayout.SOUTH);
+        buttonPanel.add(approveButton); // **CORRECT APPROVE BUTTON REFERENCE**
+        add(buttonPanel, BorderLayout.SOUTH); // Adds buttons to bottom
+        
+        pack(); // Auto-sizes dialog
     }
     
     private void loadCustomers() {
-        // Populates dropdown with all customers from JSON
+        // Loads and displays all customers from JSON file
         for (Customer customer : loanService.getAllCustomers()) {
             customerComboBox.addItem(customer.getName() + " (ID: " + customer.getId() + ")");
         }
@@ -126,60 +139,95 @@ public class LoanPage extends JDialog{
     private Customer getSelectedCustomer() {
         String selected = (String) customerComboBox.getSelectedItem();
         if (selected == null) return null;
+        // Extracts customer ID from dropdown text
         String customerId = selected.substring(selected.lastIndexOf("ID: ") + 4, selected.length() - 1);
         return loanService.getCustomerById(customerId);
     }
     
+    /**
+     * FIXED EligibilityListener - Now properly enables approveButton
+     */
     private class EligibilityListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
             Customer customer = getSelectedCustomer();
             if (customer == null) {
-                JOptionPane.showMessageDialog(LoanPage.this, "Please select a customer first");
+                JOptionPane.showMessageDialog(LoanPage.this, 
+                    "⚠️ Please select a customer first", "No Customer", JOptionPane.WARNING_MESSAGE);
                 return;
             }
             
             try {
-                double constructionCost = Double.parseDouble(constructionCostField.getText());
-                double loanAmount = Double.parseDouble(loanAmountField.getText());
+                double constructionCost = Double.parseDouble(constructionCostField.getText().trim());
+                double loanAmount = Double.parseDouble(loanAmountField.getText().trim());
                 
-                // Perform eligibility check
+                if (constructionCost <= 0 || loanAmount <= 0) {
+                    JOptionPane.showMessageDialog(LoanPage.this, 
+                        "⚠️ Amounts must be positive numbers", "Invalid Amount", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+                
+                // Perform complete eligibility check
                 EligibilityService.EligibilityResult result = 
                     eligibilityService.checkEligibility(customer, loanAmount, constructionCost);
                 
-                eligibilityResultArea.setText(result.getReason()); // Shows detailed result
+                // **FIXED: Proper approveButton reference**
+                approveButton.setEnabled(result.isEligible()); // Enables/disables CORRECTLY
                 
-                // Enable/disable approve button based on eligibility
+                // Updates result area with detailed feedback
+                eligibilityResultArea.setText(result.getReason());
+                eligibilityResultArea.setForeground(result.isEligible() ? Color.GREEN : Color.RED);
+                
+                // Visual feedback
                 checkEligibilityButton.setEnabled(false);
-                ((AbstractButton) getContentPane().getComponent(3)).setEnabled(result.isEligible());
+                if (result.isEligible()) {
+                    JOptionPane.showMessageDialog(LoanPage.this, 
+                        "✅ CUSTOMER IS ELIGIBLE!\nClick APPROVE LOAN to proceed", 
+                        "Eligible", JOptionPane.INFORMATION_MESSAGE);
+                }
                 
             } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(LoanPage.this, "Please enter valid amounts");
+                JOptionPane.showMessageDialog(LoanPage.this, 
+                    "⚠️ Please enter valid numbers for amounts", "Invalid Input", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
     
+    /**
+     * Approve loan functionality
+     */
     private class ApproveListener implements ActionListener {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            try {
-                Customer customer = getSelectedCustomer();
-                double constructionCost = Double.parseDouble(constructionCostField.getText());
-                double loanAmount = Double.parseDouble(loanAmountField.getText());
-                String interestMethod = (String) interestMethodComboBox.getSelectedItem();
-                
-                // Create and save loan application
-                loanService.createLoanApplication(customer.getId(), constructionCost, 
-                                                loanAmount, interestMethod);
-                
-                JOptionPane.showMessageDialog(LoanPage.this, 
-                    "Loan application created successfully!\nStatus: PENDING");
-                parent.repaint();
-                dispose();
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(LoanPage.this, 
-                    "Error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            }
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        try {
+            Customer customer = getSelectedCustomer();
+            double constructionCost = Double.parseDouble(constructionCostField.getText().trim());
+            double loanAmount = Double.parseDouble(loanAmountField.getText().trim());
+            String interestMethod = (String) interestMethodComboBox.getSelectedItem();
+            
+            // **STEP 1: Create PENDING loan application**
+            Loan newLoan = loanService.createLoanApplication(customer.getId(), 
+                                                           constructionCost, 
+                                                           loanAmount, interestMethod);
+            
+            // **STEP 2: IMMEDIATELY APPROVE it (for demo - in real app, separate approval step)**
+            loanService.approveLoan(newLoan.getId(), true);
+            
+            JOptionPane.showMessageDialog(LoanPage.this, 
+                "🎉 Loan APPROVED & SAVED!\n" +
+                "📋 ID: " + newLoan.getId() + "\n" +
+                "💰 Amount: R" + String.format("%.2f", loanAmount) + "\n" +
+                "📊 Status: APPROVED ✅\n\n" +
+                "💾 Check data/loans.json to verify", 
+                "APPROVED", JOptionPane.INFORMATION_MESSAGE);
+            
+            parent.repaint();
+            dispose();
+            
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(LoanPage.this, 
+                "❌ Error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
+  }
 }

@@ -8,63 +8,85 @@ import service.LoanService;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * FIXED DashboardPage - Now displays properly
+ */
 public class DashboardPage extends JFrame {
-
-   private LoanService loanService; // Main business service
-    private String userRole; // Current user's role
+    
+    private LoanService loanService;
+    private String userRole;
     
     public DashboardPage(String role) {
-        this.userRole = role; // Stores user role
-        this.loanService = new LoanService(); // Initializes service
-        initializeUI(); // Sets up interface
+        this.userRole = role;
+        this.loanService = new LoanService();
+        initializeUI();
     }
     
     private void initializeUI() {
-        setTitle("Construction Loan Tracker - " + userRole + " Dashboard");
+        setTitle("🏗️ Construction Loan Tracker - " + userRole + " Dashboard");
         setSize(1000, 700);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLocationRelativeTo(null);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // **CRITICAL**
+        setLocationRelativeTo(null); // Center screen
         
-        // Create menu bar with all features
+        // Menu bar with ALL features
         JMenuBar menuBar = new JMenuBar();
         
-        JMenu customerMenu = new JMenu("Customers");
-        JMenuItem addCustomerItem = new JMenuItem("Add Customer");
+        // Customers menu
+        JMenu customerMenu = new JMenu("👥 Customers");
+        JMenuItem addCustomerItem = new JMenuItem("➕ Add Customer");
         addCustomerItem.addActionListener(e -> new AddCustomerPage(this).setVisible(true));
         customerMenu.add(addCustomerItem);
         
-        JMenu loanMenu = new JMenu("Loans");
-        JMenuItem newLoanItem = new JMenuItem("New Loan Application");
+        // Loans menu  
+        JMenu loanMenu = new JMenu("💰 Loans");
+        JMenuItem newLoanItem = new JMenuItem("📝 New Application");
         newLoanItem.addActionListener(e -> new LoanPage(this).setVisible(true));
         loanMenu.add(newLoanItem);
         
-        JMenu disbursementMenu = new JMenu("Disbursements");
-        JMenuItem disbursementItem = new JMenuItem("Record Disbursement");
-        disbursementItem.addActionListener(e -> new DisbursementPage(DashboardPage.this).setVisible(true));
+        // Disbursements menu
+        JMenu disbursementMenu = new JMenu("🏗️ Disbursements");
+        JMenuItem disbursementItem = new JMenuItem("💸 Record Disbursement");
+        disbursementItem.addActionListener(e -> new DisbursementPage(this).setVisible(true));
         disbursementMenu.add(disbursementItem);
         
-        JMenu repaymentMenu = new JMenu("Repayments");
-        JMenuItem repaymentItem = new JMenuItem("Record Repayment");
-        repaymentItem.addActionListener(e -> new RepaymentPage(DashboardPage.this).setVisible(true));
+        // Repayments menu
+        JMenu repaymentMenu = new JMenu("💳 Repayments");
+        JMenuItem repaymentItem = new JMenuItem("🔄 Record Repayment");
+        repaymentItem.addActionListener(e -> new RepaymentPage(this).setVisible(true));
         repaymentMenu.add(repaymentItem);
         
-        JMenu reportsMenu = new JMenu("Reports");
-        JMenuItem reportsItem = new JMenuItem("Generate Reports");
+        // Reports menu
+        JMenu reportsMenu = new JMenu("📊 Reports");
+        JMenuItem reportsItem = new JMenuItem("📈 Generate Reports");
+        reportsItem.addActionListener(e -> new ReportsPage(DashboardPage.this).setVisible(true)); // **FIXED**
         reportsMenu.add(reportsItem);
-        
+
+        // Add menus to menu bar
         menuBar.add(customerMenu);
         menuBar.add(loanMenu);
         menuBar.add(disbursementMenu);
         menuBar.add(repaymentMenu);
         menuBar.add(reportsMenu);
         
-        
         setJMenuBar(menuBar);
         
-        // Status panel showing summary stats
-        JPanel statusPanel = new JPanel(new GridLayout(1, 4));
-        statusPanel.add(new JLabel("Total Customers: " + loanService.getAllCustomers().size()));
-        statusPanel.add(new JLabel("Total Loans: " + loanService.getAllLoans().size()));
-        add(statusPanel, BorderLayout.SOUTH);
+        // **FIXED Status Panel** - CORRECT BorderLayout.SOUTH
+        JPanel statusPanel = new JPanel(new GridLayout(1, 4, 10, 10));
+        statusPanel.setBorder(BorderFactory.createTitledBorder("📊 Summary"));
+        
+        statusPanel.add(new JLabel("Customers: " + loanService.getAllCustomers().size()));
+        statusPanel.add(new JLabel("Loans: " + loanService.getAllLoans().size()));
+        statusPanel.add(new JLabel("Role: " + userRole));
+        statusPanel.add(new JLabel("Status: Active"));
+        
+        add(statusPanel, BorderLayout.SOUTH); // **FIXED: No more .S SOUTH typo**
+        
+        // Welcome panel
+        JLabel welcomeLabel = new JLabel("Welcome to Construction Loan Tracker!", JLabel.CENTER);
+        welcomeLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        welcomeLabel.setForeground(Color.BLUE);
+        add(welcomeLabel, BorderLayout.CENTER);
+        
+        setVisible(true); // **ENSURES DISPLAY**
     }
 }

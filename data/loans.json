@@ -1,0 +1,62 @@
+[
+  {
+    "id": "c13c6d18-5af4-4611-a816-46a0673105f2",
+    "customerId": "602250d2-46b0-4e9a-812f-826000d266c4",
+    "constructionCost": 100000.0,
+    "loanAmount": 70000.0,
+    "status": "PENDING",
+    "interestRate": 13.75,
+    "interestMethod": "FIXED",
+    "disbursements": [],
+    "repayments": [],
+    "outstandingBalance": 70000.0
+  },
+  {
+    "id": "e20366a2-00f2-4032-876d-f3eca558d22d",
+    "customerId": "602250d2-46b0-4e9a-812f-826000d266c4",
+    "constructionCost": 100000.0,
+    "loanAmount": 70000.0,
+    "status": "PENDING",
+    "interestRate": 13.75,
+    "interestMethod": "FIXED",
+    "disbursements": [],
+    "repayments": [],
+    "outstandingBalance": 70000.0
+  },
+  {
+    "id": "d23b4cae-6e4f-4ef6-ab8d-cb7b9bcd40b4",
+    "customerId": "602250d2-46b0-4e9a-812f-826000d266c4",
+    "constructionCost": 100000.0,
+    "loanAmount": 70000.0,
+    "status": "APPROVED",
+    "interestRate": 13.75,
+    "interestMethod": "FIXED",
+    "disbursements": [],
+    "repayments": [],
+    "outstandingBalance": 70000.0
+  },
+  {
+    "id": "0c45e6b4-eea8-4960-b1ea-08e32603dec9",
+    "customerId": "602250d2-46b0-4e9a-812f-826000d266c4",
+    "constructionCost": 100000.0,
+    "loanAmount": 70000.0,
+    "status": "APPROVED",
+    "interestRate": 13.75,
+    "interestMethod": "FIXED",
+    "disbursements": [],
+    "repayments": [],
+    "outstandingBalance": 70000.0
+  },
+  {
+    "id": "21d86a9b-374f-4127-b60d-5788f84de2a5",
+    "customerId": "ff173bf0-7ec8-42ae-b47e-cec4a7ad0048",
+    "constructionCost": 200000.0,
+    "loanAmount": 120000.0,
+    "status": "APPROVED",
+    "interestRate": 15.25,
+    "interestMethod": "FIXED",
+    "disbursements": [],
+    "repayments": [],
+    "outstandingBalance": 120000.0
+  }
+]

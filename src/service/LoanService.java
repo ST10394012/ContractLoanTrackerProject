@@ -55,15 +55,30 @@ public class LoanService {
     /**
      * Approves or rejects pending loan
      */
-    public void approveLoan(String loanId, boolean approve) {
-        List<Loan> loans = JsonUtil.readFromJson(LOANS_PATH, Loan.class);
-        loans.stream()
-             .filter(loan -> loan.getId().equals(loanId)) // Finds target loan
-             .forEach(loan -> {
-                 loan.setStatus(approve ? "APPROVED" : "REJECTED"); // Updates status
-             });
-        JsonUtil.writeToJson(LOANS_PATH, loans); // Saves changes
+   public void approveLoan(String loanId, boolean approve) {
+    // Load ALL loans from JSON file
+    List<Loan> loans = JsonUtil.readFromJson(LOANS_PATH, Loan.class);
+    
+    // Find and update the specific loan
+    boolean found = false;
+    for (Loan loan : loans) {
+        if (loan.getId().equals(loanId)) {
+            loan.setStatus(approve ? "APPROVED" : "REJECTED"); // Update status
+            System.out.println("✅ Loan " + loanId + " updated to: " + loan.getStatus()); // DEBUG
+            found = true;
+            break; // Found and updated
+        }
     }
+    
+    if (!found) {
+        System.out.println("❌ Loan ID not found: " + loanId); // DEBUG
+        throw new IllegalArgumentException("Loan not found");
+    }
+    
+    // **CRITICAL FIX: SAVE BACK TO JSON**
+    JsonUtil.writeToJson(LOANS_PATH, loans);
+    System.out.println("💾 Loans saved to JSON - Total loans: " + loans.size()); // DEBUG
+}
     
     /**
      * Records disbursement for approved loan
