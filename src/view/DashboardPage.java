@@ -40,7 +40,13 @@ public class DashboardPage extends JFrame {
         
         JMenu disbursementMenu = new JMenu("Disbursements");
         JMenuItem disbursementItem = new JMenuItem("Record Disbursement");
+        disbursementItem.addActionListener(e -> new DisbursementPage(DashboardPage.this).setVisible(true));
         disbursementMenu.add(disbursementItem);
+        
+        JMenu repaymentMenu = new JMenu("Repayments");
+        JMenuItem repaymentItem = new JMenuItem("Record Repayment");
+        repaymentItem.addActionListener(e -> new RepaymentPage(DashboardPage.this).setVisible(true));
+        repaymentMenu.add(repaymentItem);
         
         JMenu reportsMenu = new JMenu("Reports");
         JMenuItem reportsItem = new JMenuItem("Generate Reports");
@@ -49,7 +55,9 @@ public class DashboardPage extends JFrame {
         menuBar.add(customerMenu);
         menuBar.add(loanMenu);
         menuBar.add(disbursementMenu);
+        menuBar.add(repaymentMenu);
         menuBar.add(reportsMenu);
+        
         
         setJMenuBar(menuBar);
         
